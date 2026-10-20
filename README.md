@@ -2,6 +2,8 @@
 
 **Hide secrets in plain sight.**
 
+🌐 **Live Website:** [https://pixelvault.harisharraz02.workers.dev](https://pixelvault.harisharraz02.workers.dev)
+
 Client-side image steganography with AES-256-GCM encryption. Zero uploads. Your secrets never leave your browser.
 
 ## Features
