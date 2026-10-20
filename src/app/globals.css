@@ -1,26 +1,107 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --green: #00ff41;
+  --green-dim: #00c832;
+  --green-muted: #00ff4133;
+  --bg: #0a0a0a;
+  --bg-panel: #111111;
+  --bg-input: #0d0d0d;
+  --border: #1a1a1a;
+  --border-active: #00ff4155;
+  --text: #d4d4d4;
+  --text-muted: #6b6b6b;
+  --font-mono: var(--font-mono);
+  --font-sans: var(--font-sans);
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+* {
+  box-sizing: border-box;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+::selection {
+  background: var(--green-muted);
+  color: var(--green);
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+/* Scrollbar — minimal hacker style */
+::-webkit-scrollbar {
+  width: 4px;
+}
+::-webkit-scrollbar-track {
+  background: var(--bg);
+}
+::-webkit-scrollbar-thumb {
+  background: #1f1f1f;
+  border-radius: 2px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #00ff4133;
+}
+
+/* Focus indicator — visible, green, no outline:none anywhere */
+:focus-visible {
+  outline: 1.5px solid var(--green);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+/* Terminal cursor blink */
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+.cursor-blink::after {
+  content: "_";
+  color: var(--green);
+  animation: blink 1s step-end infinite;
+  margin-left: 1px;
+}
+
+/* Scan line overlay — subtle CRT feel, not overdone */
+.scanlines::before {
+  content: "";
+  pointer-events: none;
+  position: fixed;
+  inset: 0;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(0, 0, 0, 0.03) 2px,
+    rgba(0, 0, 0, 0.03) 4px
+  );
+  z-index: 9999;
+}
+
+/* Green glow — used sparingly on ONE key element only (R-13 dose cap) */
+.glow-green {
+  box-shadow: 0 0 20px rgba(0, 255, 65, 0.15), 0 0 40px rgba(0, 255, 65, 0.06);
+}
+
+/* Drop zone highlight */
+@keyframes border-pulse {
+  0%, 100% { border-color: #00ff4133; }
+  50% { border-color: #00ff4177; }
+}
+.dropzone-active {
+  animation: border-pulse 1.2s ease-in-out infinite;
+  background: rgba(0, 255, 65, 0.03);
+}
+
+/* Fade in for panels */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.fade-in {
+  animation: fadeIn 0.2s ease-out forwards;
+}
+
+/* Progress bar fill */
+@keyframes progress-fill {
+  from { width: 0%; }
+}
+.progress-bar {
+  animation: progress-fill 0.4s ease-out forwards;
 }

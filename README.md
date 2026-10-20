@@ -1,36 +1,54 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# PixelVault
+
+**Hide secrets in plain sight.**
+
+Client-side image steganography with AES-256-GCM encryption. Zero uploads. Your secrets never leave your browser.
+
+## Features
+
+- **LSB (Least Significant Bit)** — hides data in pixel values, visually undetectable
+- **Append method** — appends encrypted payload after image bytes, lossless
+- **AES-256-GCM encryption** — PBKDF2 key derivation with 200,000 iterations
+- **Client-side only** — no server, no uploads, no logs
+- **Capacity indicator** — see how much of your image you're using (LSB mode)
+
+## Stack
+
+- Next.js 16 (App Router)
+- Tailwind CSS
+- WebCrypto API (native browser crypto)
+- Canvas API (pixel manipulation)
 
 ## Getting Started
 
-First, run the development server:
-
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000).
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## How It Works
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### LSB (Least Significant Bit)
+Each pixel has R, G, B channels. We replace the least significant bit of each channel with one bit of your payload. The change is imperceptible (1 shade out of 256). A 1920x1080 image holds ~777KB of data.
 
-## Learn More
+### Append
+The encrypted payload is appended after the image's last byte with a magic sentinel marker. Any image viewer renders it normally; the data sits in the tail.
 
-To learn more about Next.js, take a look at the following resources:
+### Encryption
+1. PBKDF2 derives a 256-bit AES key from your password + random 16-byte salt
+2. AES-256-GCM encrypts the message with a random 12-byte IV
+3. Layout: `[salt 16B][IV 12B][ciphertext]`
+4. This encrypted blob is then embedded via LSB or Append
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Privacy
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+- No analytics
+- No network requests
+- No server
+- Source is fully auditable
 
-## Deploy on Vercel
+## By
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+[risterz](https://github.com/risterz) — built with [Antigravity](https://antigravity.dev) + Antislop
